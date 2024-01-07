@@ -682,8 +682,28 @@ que sejam necessárias.
 \textbf{Importante}: Não pode ser alterado o texto deste ficheiro fora deste anexo.
 
 \subsection*{Problema 1}
+% rever texto
 
-% chupar pika intensa ao jno
+     Para resolver este problema, chegamos á conclusão que tinhamos que guardar a primeira linha da matrix e depois rodar a 
+matrix 90 graus no sentido anti-horário e repetir o processo até que a matrix ficasse vazia.
+
+     Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
+Esta função realiza duas operações principais em sequência: a transposição da matriz (transpose), 
+que troca as suas linhas por colunas, seguida pela inversão de cada nova linha (reverse). 
+O resultado é uma rotação de noventa graus no sentido anti-horário.
+
+\begin{code}
+rotate :: Eq a => [[a]] -> [[a]]
+rotate = reverse . transpose
+\end{code}
+
+     O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
+em cada passo recursivo. Utilizando o combinador (id + id x rotate), que aplica a função 
+rotate ao resto da matriz apos separar a primeira linha. A cada iteração, anaRotate acumula 
+a primeira linha da matriz transformada, construindo assim uma lista de listas, onde 
+cada sublista representa uma camada da espiral.
+O diagrama de anamorfismo abaixo visualiza este processo.
+
 
 
 \begin{eqnarray*}
@@ -693,22 +713,24 @@ que sejam necessárias.
  }
 \end{eqnarray*}
 
-
 \begin{code}
-rotate :: Eq a => [[a]] -> [[a]]
-rotate = reverse . transpose
-
 anaRotate :: Eq a => [[a]] -> [[a]]
 anaRotate = anaList ( (id -|- id >< rotate) . outList)
 \end{code}
 
+Para alcançar a representação final da matriz em espiral, utilizamos a função concat, 
+que concatena todas as sublistas numa única lista. O diagrama a seguir ilustra a 
+aplicação de concat à estrutura produzida por anaRotate, resultando na lista final que pertendemos obter com a função matrot.
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
-  ((|A|)^*)^*\ar@@/_1.5pc/[rr]_{|matrot|}\ar[r]^(0.50){|anaRotate|} & ((|A|)^*)^*\ar[r]^(0.50){|concat|} & (|A|)^*
+     ((|A|)^*)^*\ar@@/_1.5pc/[rr]_{|matrot|}\ar[r]^(0.50){|anaRotate|} & ((|A|)^*)^*\ar[r]^(0.50){|concat|} & (|A|)^*
 }
 \end{eqnarray*}
 
+A função matrot é definida como a composição de concat e anaRotate. Esta única linha de 
+Haskell encapsula todo o processo de transformação da matriz original para a lista espiralada, 
+como demonstrado pela equivalência a seguir.
 
 \begin{eqnarray*}
 \start
@@ -721,7 +743,6 @@ anaRotate = anaList ( (id -|- id >< rotate) . outList)
 |
 \end{eqnarray*}
 
-
 \begin{code}
 matrot :: Eq a => [[a]] -> [a]
 matrot = concat ( anaRotate )
@@ -729,51 +750,47 @@ matrot = concat ( anaRotate )
 
 % matrot = hyloList (either nil conc) $ (id -|- id >< rotate) . outList
 
-
-
-
-
-
-
-
-
-
-
 \subsection*{Problema 2}
 
+%isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ"
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm @@R=2cm{
+     \mathbb{(|A|)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaReverse|} & 1 + A^* \times{\mathbb{(|A|)^*}}\ar[r]^{id + ifp} & 1 + A^* \times{\mathbb{(|A|)^*}}\ar[d]^{id +id \times{|anaReverse|}} \\
+     A^* && 1 + A^* \times{\mathbb{(|A|)^*}}\ar[ll]^{ in_{Listas}} 
+ }
+\end{eqnarray*}
+
 \begin{code}
-isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ"
+anaReverse :: Eq a => [a] -> [a]
+anaReverse = anaList ((id -|- ifp) . outList)
+     where 
+          ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
+\end{code}
 
-reverseVowels :: String -> String
-reverseVowels = reverseByPredicate isVowel
+% diagrama do pre
 
-
+\begin{code}
+pre :: 
 pre = conc . split id (filter isVowel)
+\end{code}
 
+\begin{eqnarray*}
+\xymatrix@@C=3cm @@R=2cm{
+     (|A|)^*\ar@@/_1.5pc/[rr]_{|reverseByPredicate|}\ar[r]^(0.50){|pre|} & (|A|)^*\ar[r]^(0.50){|anaReverse|} & (|A|)^*
+}
+\end{eqnarray*}
+
+\begin{code}
 reverseByPredicate :: (a -> Bool) -> [a] -> [a]
-reverseByPredicate p = (anaList ((id -|- ifp) . outList)) . pre
-    where
-        ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
+reverseByPredicate p = anaReverse . pre
 \end{code}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\begin{code}
+reverseVowels :: String -> String
+reverseVowels = reverseByPredicate isVowel
+\end{code}
 
 \subsection*{Problema 3}
 
