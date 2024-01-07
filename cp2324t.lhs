@@ -683,10 +683,57 @@ que sejam necessárias.
 
 \subsection*{Problema 1}
 
+% chupar pika intensa ao jno
+
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm @@R=2cm{
+     \mathbb{((|A|)^*)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaRotate|} & 1 + A^* \times{\mathbb{((|A|)^*)^*}}\ar[r]^{id + id \times{\mathbb{|rotate|}} } & 1 + A^* \times{\mathbb{((|A|)^*)^*}}\ar[d]^{id +id \times{|anaRotate|}} \\
+     (A^*)^* && 1 + A^* \times{\mathbb{((|A|)^*)^*}}\ar[ll]^{ in_{Listas}} 
+ }
+\end{eqnarray*}
+
+
 \begin{code}
-matrot:: Eq a => [[a]] -> [a]
-matrot= undefined
+rotate :: Eq a => [[a]] -> [[a]]
+rotate = reverse . transpose
+
+anaRotate :: Eq a => [[a]] -> [[a]]
+anaRotate = anaList ( (id -|- id >< rotate) . outList)
 \end{code}
+
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm @@R=2cm{
+  ((|A|)^*)^*\ar@@/_1.5pc/[rr]_{|matrot|}\ar[r]^(0.50){|anaRotate|} & ((|A|)^*)^*\ar[r]^(0.50){|concat|} & (|A|)^*
+}
+\end{eqnarray*}
+
+
+\begin{eqnarray*}
+\start
+|
+	matrot = concat . anaRotate
+|
+\just\equiv{ (72); (73) }
+|
+     matrot = concat ( anaRotate )
+|
+\end{eqnarray*}
+
+
+\begin{code}
+matrot :: Eq a => [[a]] -> [a]
+matrot = concat ( anaRotate )
+\end{code}
+
+% matrot = hyloList (either nil conc) $ (id -|- id >< rotate) . outList
+
+
+
+
+
+
 
 
 
@@ -695,12 +742,38 @@ matrot= undefined
 \subsection*{Problema 2}
 
 \begin{code}
+isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ"
+
 reverseVowels :: String -> String
-reverseVowels = undefined
+reverseVowels = reverseByPredicate isVowel
+
+
+pre = conc . split id (filter isVowel)
 
 reverseByPredicate :: (a -> Bool) -> [a] -> [a]
-reverseByPredicate p = undefined
+reverseByPredicate p = (anaList ((id -|- ifp) . outList)) . pre
+    where
+        ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
 \end{code}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection*{Problema 3}
 
@@ -715,6 +788,13 @@ loop = undefined
 start = undefined
 
 \end{code}
+
+
+
+
+
+
+
 
 \subsection*{Problema 4}
 

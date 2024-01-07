@@ -892,18 +892,53 @@ que sejam necessárias.
 
 \subsection*{Problema 1}
 
+% chupar pika intensa ao jno
+
+
+\begin{eqnarray*}
+\xymatrix@C=3cm @R=2cm{
+     \mathbb{((\ensuremath{\Conid{A}})^*)^*}\ar[r]^{out_{Listas}}\ar[d]_{\ensuremath{\Varid{anaRotate}}} & 1 + A^* \times{\mathbb{((\ensuremath{\Conid{A}})^*)^*}}\ar[r]^{id + id \times{\mathbb{\ensuremath{\Varid{rotate}}}} } & 1 + A^* \times{\mathbb{((\ensuremath{\Conid{A}})^*)^*}}\ar[d]^{id +id \times{\ensuremath{\Varid{anaRotate}}}} \\
+     (A^*)^* && 1 + A^* \times{\mathbb{((\ensuremath{\Conid{A}})^*)^*}}\ar[ll]^{ in_{Listas}} 
+ }
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{rotate}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{rotate}\mathrel{=}\Varid{reverse}\comp \Varid{transpose}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{anaRotate}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{anaRotate}\mathrel{=}\anaList{(\Varid{id}+\Varid{id}\times\Varid{rotate})\comp \Varid{outList}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{eqnarray*}
+\xymatrix@C=3cm @R=2cm{
+  ((\ensuremath{\Conid{A}})^*)^*\ar@/_1.5pc/[rr]_{\ensuremath{\Varid{matrot}}}\ar[r]^(0.50){\ensuremath{\Varid{anaRotate}}} & ((\ensuremath{\Conid{A}})^*)^*\ar[r]^(0.50){\ensuremath{\Varid{concat}}} & (\ensuremath{\Conid{A}})^*
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+\ensuremath{\Varid{matrot}\mathrel{=}\Varid{concat}\comp \Varid{anaRotate}}
+\just\equiv{ (72); (73) }
+\ensuremath{\Varid{matrot}\mathrel{=}\Varid{concat}\;(\Varid{anaRotate})}
+\end{eqnarray*}
+
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{matrot}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\Varid{matrot}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{matrot}\mathrel{=}\Varid{concat}\;(\Varid{anaRotate}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-
-
-
+% matrot = hyloList (either nil conc) $ (id -|- id >< rotate) . outList
 
 \subsection*{Problema 2}
 
