@@ -739,7 +739,38 @@ matrot = concat ( anaRotate )
 
 \subsection*{Problema 2}
 
-%isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ"
+Inicialmente o Problema 2 pede para inverter as vogais de uma string.
+Como tal, decidimos implementar a função pre que consiste em 
+colocar todas as vogais no fim da string, mantendo a ordem original dos outros caracteres.
+
+Para tal, utilizamos a função conc que concatena duas strings e a função split que separa uma string em duas,
+conforme o predicado que lhe é passado. Neste caso, o predicado é a função isVowel que verifica se um caracter é uma vogal.
+
+A função pre é definida como a composicao de conc e split, juntamente com filter isVowel.
+
+\begin{code}
+isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ"
+\end{code}
+
+%"acidos" e devolve "acidosaio"
+\begin{code}
+pre :: String -> String
+pre = conc . split id (filter isVowel)
+\end{code}
+
+Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
+é o resultado da função pre, ou seja, as vogais estão no fim da string. 
+
+A anaReverse percorre essa lista e inverte elementos específicos, baseando-se num predicado p.
+
+Dentro do anamorfismo, a função ifp é usada com mecanismo de decisão que aplica o 
+predicado p a cada elemento da lista, quando o elemento é uma vogal a função ifp aplica um
+split, substituíndo o elemento em questão pelo último elemento da lista e removendo o mesmo. 
+
+Isso resulta na inversão da posição das vogais dentro da lista. 
+
+Se o elemento não satisfizer o predicado, ele é mantido em sua posição original, e a função procede para o 
+próximo elemento da lista.
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
@@ -748,6 +779,7 @@ matrot = concat ( anaRotate )
  }
 \end{eqnarray*}
 
+% se receber "acidosaio" devolve no fim "ocidas"
 \begin{code}
 anaReverse :: Eq a => [a] -> [a]
 anaReverse p = (anaList ((id -|- ifp) . outList))
@@ -755,11 +787,14 @@ anaReverse p = (anaList ((id -|- ifp) . outList))
           ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
 \end{code}
 
-% mete as vogais no fim da string
 \begin{code}
-pre :: String -> String
-pre = conc . split id (filter isVowel)
+reverseVowels :: String -> String
+reverseVowels = reverseByPredicate isVowel
 \end{code}
+
+Na segunda parte do Problema 2 é pedido para generalizar a função inicial,
+de forma a inverter os elementos de uma dada lista que satisfazem um dado predicado.
+Como tal, 
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
@@ -771,21 +806,6 @@ pre = conc . split id (filter isVowel)
 reverseByPredicate :: (a -> Bool) -> [a] -> [a]
 reverseByPredicate p = anaReverse p . pre
 \end{code}
-
-\begin{code}
-reverseVowels :: String -> String
-reverseVowels = reverseByPredicate isVowel
-\end{code}
-
-
-
-
-
-
-
-
-
-
 
 \subsection*{Problema 3}
 
@@ -841,38 +861,48 @@ instantaneous :: Dist Delay
 instantaneous = D [ (0,1) ]
 \end{code}
 
-%a funcao recebe um segmento e uma lista de dados e devolve uma lista com os atrasos associados a esse segmento
-% lka (S3, S4) dados
-% [2,3,5,2,0]
-% vai a lista dos dados e busca o delay associado a cada elemento
+A função lka é uma função auxiliar que recebe um segmento e uma lista de dados 
+e devolve uma lista com os atrasos associados a esse segmento
+
+% lka (S3, S4) dados -> [2,3,5,2,0]
 \begin{code}
 lka :: Eq a => a -> [(a, b)] -> [b]
 lka k = map p2 . filter ( (== k) . p1 )
 \end{code}
 
-%a funcao recebe um segmento e devolve uma lista com as probabilidades associadas a cada delay
-% mksd (S0, S1)
-% ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
+Para auxiliar a geração da base de dados probabilística, usamos a função mkdist que faz o sumário 
+estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
+
+\begin{code}
+mkdist :: Eq a => [a] -> Dist a
+mkdist = uniform
+\end{code}
+
+Definimos também outra função auxiliar, a função mksd que começa por aplicar a função lka aos dados, 
+de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist 
+a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
+
+% mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{code}
 mksd :: Segment -> (Segment, Dist Delay)
 mksd = split id $ mkdist . flip lka dados
 \end{code}
 
-% primeiro criamos um map com os segmentos depois eliminamos os repetidos
-% e por fim aplicamos a funcao mksd a cada segmento
-% esta funcao devolve uma lista de tuplos com o segmento e a sua distribuicao
+Por fim para gerar a base de dados probabilística, começamos por extrair os segmentos dos dados 
+e eliminar os repetidos, de forma a obter uma lista de segmentos.
+
+De seguida aplicamos a função mksd a todos os segmentos, 
+devolvendo assim uma lista de tuplos com o segmento e a sua respetiva distribuição. 
+
 \begin{code}
 db :: [(Segment, Dist Delay)]
 db = map mksd $ nub $ map p1 dados
 \end{code}
 
-% funcao que recebe uma lista e devolve uma distribuicao uniforme
-\begin{code}
-mkdist :: Eq a => [a] -> Dist a
-mkdist = uniform\end{code}
-\end{code}
 
-% funcao que recebe um segmento e devolve a sua distribuicao de atrasos
+Esta função começa por procurar o segmento na base de dados probabilística, e caso o encontre, 
+devolve a sua distribuição de atrasos.
+
 \begin{code}
 delay :: Segment -> Dist Delay
 delay =  fj . mkf db
@@ -882,6 +912,10 @@ delay =  fj . mkf db
 fj :: Maybe a -> a
 fj (Just a) = a
 \end{code}
+
+
+função probabilística deverá informar qualquer utente que queira ir da paragem a até à paragem b de uma dada
+linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 
 \begin{code}
 pdelay = undefined

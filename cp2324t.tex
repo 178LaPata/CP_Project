@@ -960,7 +960,45 @@ como demonstrado pela equivalência a seguir.
 
 \subsection*{Problema 2}
 
-%isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ"
+Inicialmente o Problema 2 pede para inverter as vogais de uma string.
+Como tal, decidimos implementar a função pre que consiste em 
+colocar todas as vogais no fim da string, mantendo a ordem original dos outros caracteres.
+
+Para tal, utilizamos a função conc que concatena duas strings e a função split que separa uma string em duas,
+conforme o predicado que lhe é passado. Neste caso, o predicado é a função isVowel que verifica se um caracter é uma vogal.
+
+A função pre é definida como a composicao de conc e split, juntamente com filter isVowel.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{isVowel}\mathrel{=}\Varid{oneOf}\;\text{\ttfamily \char34 AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòóôõùúĨĩŨũẼẽ\char34}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+%"acidos" e devolve "acidosaio"
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pre}\mathbin{::}\Conid{String}\to \Conid{String}{}\<[E]%
+\\
+\>[B]{}\Varid{pre}\mathrel{=}\mathsf{conc}\comp \conj{\Varid{id}}{\Varid{filter}\;\Varid{isVowel}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
+é o resultado da função pre, ou seja, as vogais estão no fim da string. 
+
+A anaReverse percorre essa lista e inverte elementos específicos, baseando-se num predicado p.
+
+Dentro do anamorfismo, a função ifp é usada com mecanismo de decisão que aplica o 
+predicado p a cada elemento da lista, quando o elemento é uma vogal a função ifp aplica um
+split, substituíndo o elemento em questão pelo último elemento da lista e removendo o mesmo. 
+
+Isso resulta na inversão da posição das vogais dentro da lista. 
+
+Se o elemento não satisfizer o predicado, ele é mantido em sua posição original, e a função procede para o 
+próximo elemento da lista.
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -969,6 +1007,7 @@ como demonstrado pela equivalência a seguir.
  }
 \end{eqnarray*}
 
+% se receber "acidosaio" devolve no fim "ocidas"
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{6}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -990,15 +1029,18 @@ como demonstrado pela equivalência a seguir.
 \ColumnHook
 \end{hscode}\resethooks
 
-% mete as vogais no fim da string
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{pre}\mathbin{::}\Conid{String}\to \Conid{String}{}\<[E]%
+\>[B]{}\Varid{reverseVowels}\mathbin{::}\Conid{String}\to \Conid{String}{}\<[E]%
 \\
-\>[B]{}\Varid{pre}\mathrel{=}\mathsf{conc}\comp \conj{\Varid{id}}{\Varid{filter}\;\Varid{isVowel}}{}\<[E]%
+\>[B]{}\Varid{reverseVowels}\mathrel{=}\Varid{reverseByPredicate}\;\Varid{isVowel}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+Na segunda parte do Problema 2 é pedido para generalizar a função inicial,
+de forma a inverter os elementos de uma dada lista que satisfazem um dado predicado.
+Como tal, 
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -1014,25 +1056,6 @@ como demonstrado pela equivalência a seguir.
 \>[B]{}\Varid{reverseByPredicate}\;\Varid{p}\mathrel{=}\Varid{anaReverse}\;\Varid{p}\comp \Varid{pre}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{reverseVowels}\mathbin{::}\Conid{String}\to \Conid{String}{}\<[E]%
-\\
-\>[B]{}\Varid{reverseVowels}\mathrel{=}\Varid{reverseByPredicate}\;\Varid{isVowel}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-
-
-
-
-
-
-
-
-
 
 \subsection*{Problema 3}
 
@@ -1123,10 +1146,10 @@ como demonstrado pela equivalência a seguir.
 \ColumnHook
 \end{hscode}\resethooks
 
-a funcao recebe um segmento e uma lista de dados e devolve uma lista com os atrasos associados a esse segmento
-% lka (S3, S4) dados
-% [2,3,5,2,0]
-% vai a lista dos dados e busca o delay associado a cada elemento
+A função lka é uma função auxiliar que recebe um segmento e uma lista de dados 
+e devolve uma lista com os atrasos associados a esse segmento
+
+% lka (S3, S4) dados -> [2,3,5,2,0]
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1136,9 +1159,23 @@ a funcao recebe um segmento e uma lista de dados e devolve uma lista com os atra
 \ColumnHook
 \end{hscode}\resethooks
 
-a funcao recebe um segmento e devolve uma lista com as probabilidades associadas a cada delay
-% mksd (S0, S1)
-% ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
+Para auxiliar a geração da base de dados probabilística, usamos a função mkdist que faz o sumário 
+estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{mkdist}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu \Varid{a}\mskip1.5mu]\to \fun{Dist}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{mkdist}\mathrel{=}\Varid{uniform}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Definimos também outra função auxiliar, a função mksd que começa por aplicar a função lka aos dados, 
+de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist 
+a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
+
+% mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1148,9 +1185,12 @@ a funcao recebe um segmento e devolve uma lista com as probabilidades associadas
 \ColumnHook
 \end{hscode}\resethooks
 
-% primeiro criamos um map com os segmentos depois eliminamos os repetidos
-% e por fim aplicamos a funcao mksd a cada segmento
-% esta funcao devolve uma lista de tuplos com o segmento e a sua distribuicao
+Por fim para gerar a base de dados probabilística, começamos por extrair os segmentos dos dados 
+e eliminar os repetidos, de forma a obter uma lista de segmentos.
+
+De seguida aplicamos a função mksd a todos os segmentos, 
+devolvendo assim uma lista de tuplos com o segmento e a sua respetiva distribuição. 
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1160,18 +1200,10 @@ a funcao recebe um segmento e devolve uma lista com as probabilidades associadas
 \ColumnHook
 \end{hscode}\resethooks
 
-% funcao que recebe uma lista e devolve uma distribuicao uniforme
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{mkdist}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu \Varid{a}\mskip1.5mu]\to \fun{Dist}\;\Varid{a}{}\<[E]%
-\\
-\>[B]{}\Varid{mkdist}\mathrel{=}\Varid{uniform}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-\end{code}
 
-% funcao que recebe um segmento e devolve a sua distribuicao de atrasos
+Esta função começa por procurar o segmento na base de dados probabilística, e caso o encontre, 
+devolve a sua distribuição de atrasos.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{10}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1191,6 +1223,10 @@ a funcao recebe um segmento e devolve uma lista com as probabilidades associadas
 \>[B]{}\Varid{fj}\;(\Conid{Just}\;\Varid{a})\mathrel{=}\Varid{a}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+
+função probabilística deverá informar qualquer utente que queira ir da paragem a até à paragem b de uma dada
+linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
