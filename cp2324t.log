@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.12.29)  7 JAN 2024 22:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.12.29)  8 JAN 2024 23:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1460,7 +1460,9 @@ File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 231>
 \openout7 = `cp2324t.ptb'.
 
+\openout7 = `cp2324t.ptb'.
 
+ <xymatrix 3x1 146>
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
@@ -1468,7 +1470,6 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 [10]
 \openout7 = `cp2324t.ptb'.
 
- <xymatrix 3x1 146>
 \openout7 = `cp2324t.ptb'.
 
 \openout7 = `cp2324t.ptb'.
@@ -1477,6 +1478,51 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 
 \openout7 = `cp2324t.ptb'.
 
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+
+Overfull \hbox (128.0374pt too wide) has occurred while \output is active
+ [][]| 
+ []
+
+[11]
+
+! LaTeX Error: \begin{document} ended by \end{code}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1172 \end{code}
+                 
+? r
+OK, entering \nonstopmode...
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.1172 \end{code}
+                 
+Things are pretty mixed up, but I think the worst is over.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
 
 No file cp2324t.ind.
 No file cp2324t.bbl.
@@ -1485,18 +1531,21 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
-[11] (./cp2324t.aux)
+[12] (./cp2324t.aux)
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package rerunfilecheck Info: File `cp2324t.out' has not changed.
 (rerunfilecheck)             Checksum: DA35CDC4B1C3D714246AA54FE45C0974;1793.
  ) 
 Here is how much of TeX's memory you used:
- 45186 strings out of 480171
- 974619 string characters out of 5894488
- 1521606 words of memory out of 5000000
- 62415 multiletter control sequences out of 15000+600000
+ 45188 strings out of 480171
+ 974633 string characters out of 5894488
+ 1523606 words of memory out of 5000000
+ 62416 multiletter control sequences out of 15000+600000
  741519 words of font info for 156 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  99i,21n,94p,3281b,841s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1546,10 +1595,10 @@ type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/stmaryrd/stmary9.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/xypic/xyatip10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/xypic/
 xybtip10.pfb>
-Output written on cp2324t.pdf (12 pages, 480153 bytes).
+Output written on cp2324t.pdf (13 pages, 482554 bytes).
 PDF statistics:
- 295 PDF objects out of 1000 (max. 8388607)
- 236 compressed objects within 3 object streams
- 33 named destinations out of 1000 (max. 500000)
+ 300 PDF objects out of 1000 (max. 8388607)
+ 240 compressed objects within 3 object streams
+ 34 named destinations out of 1000 (max. 500000)
  100 words of extra memory for PDF output out of 10000 (max. 10000000)
 

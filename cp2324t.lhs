@@ -732,23 +732,10 @@ A função matrot é definida como a composição de concat e anaRotate. Esta ú
 Haskell encapsula todo o processo de transformação da matriz original para a lista espiralada, 
 como demonstrado pela equivalência a seguir.
 
-\begin{eqnarray*}
-\start
-|
-	matrot = concat . anaRotate
-|
-\just\equiv{ (72); (73) }
-|
-     matrot = concat ( anaRotate )
-|
-\end{eqnarray*}
-
 \begin{code}
 matrot :: Eq a => [[a]] -> [a]
 matrot = concat ( anaRotate )
 \end{code}
-
-% matrot = hyloList (either nil conc) $ (id -|- id >< rotate) . outList
 
 \subsection*{Problema 2}
 
@@ -756,22 +743,21 @@ matrot = concat ( anaRotate )
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
-     \mathbb{(|A|)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaReverse|} & 1 + A^* \times{\mathbb{(|A|)^*}}\ar[r]^{id + ifp} & 1 + A^* \times{\mathbb{(|A|)^*}}\ar[d]^{id +id \times{|anaReverse|}} \\
-     A^* && 1 + A^* \times{\mathbb{(|A|)^*}}\ar[ll]^{ in_{Listas}} 
+     \mathbb{(|A|)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaReverse|} & 1 + A \times{\mathbb{(|A|)^*}}\ar[r]^{id + ifp} & 1 + A \times{\mathbb{(|A|)^*}}\ar[d]^{id +id \times{|anaReverse|}} \\
+     (|A|)^* && 1 + A \times{\mathbb{(|A|)^*}}\ar[ll]^{ in_{Listas}} 
  }
 \end{eqnarray*}
 
 \begin{code}
 anaReverse :: Eq a => [a] -> [a]
-anaReverse = anaList ((id -|- ifp) . outList)
+anaReverse p = (anaList ((id -|- ifp) . outList))
      where 
           ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
 \end{code}
 
-% diagrama do pre
-
+% mete as vogais no fim da string
 \begin{code}
-pre :: 
+pre :: String -> String
 pre = conc . split id (filter isVowel)
 \end{code}
 
@@ -783,14 +769,23 @@ pre = conc . split id (filter isVowel)
 
 \begin{code}
 reverseByPredicate :: (a -> Bool) -> [a] -> [a]
-reverseByPredicate p = anaReverse . pre
+reverseByPredicate p = anaReverse p . pre
 \end{code}
-
 
 \begin{code}
 reverseVowels :: String -> String
 reverseVowels = reverseByPredicate isVowel
 \end{code}
+
+
+
+
+
+
+
+
+
+
 
 \subsection*{Problema 3}
 
@@ -816,16 +811,87 @@ start = undefined
 \subsection*{Problema 4}
 
 \begin{code}
-
-db = undefined
-
-mkdist = undefined
-
-delay = undefined
-
-pdelay = undefined
-
+data Stop = S0 | S1 | S2 | S3 | S4 | S5 deriving (Show, Eq, Ord, Enum)
 \end{code}
+
+\begin{code}
+type Delay = Integer
+\end{code}
+
+\begin{code}
+type Segment = (Stop, Stop)
+\end{code}
+
+\label{pg:dados}
+\begin{code}
+dados = [((S0,S1),0),((S0,S1),2),((S0,S1),0),((S0,S1),3),((S0,S1),3),
+         ((S1,S2),0),((S1,S2),2),((S1,S2),1),((S1,S2),1),((S1,S2),4),
+         ((S2,S3),2),((S2,S3),2),((S2,S3),4),((S2,S3),0),((S2,S3),5),
+         ((S3,S4),2),((S3,S4),3),((S3,S4),5),((S3,S4),2),((S3,S4),0),
+         ((S4,S5),0),((S4,S5),5),((S4,S5),0),((S4,S5),7),((S4,S5),-1)]
+\end{code}
+
+\begin{code}
+mkf :: Eq a => [(a, b)] -> a -> Maybe b
+mkf = flip Prelude.lookup
+\end{code}
+
+\begin{code}
+instantaneous :: Dist Delay
+instantaneous = D [ (0,1) ]
+\end{code}
+
+%a funcao recebe um segmento e uma lista de dados e devolve uma lista com os atrasos associados a esse segmento
+% lka (S3, S4) dados
+% [2,3,5,2,0]
+% vai a lista dos dados e busca o delay associado a cada elemento
+\begin{code}
+lka :: Eq a => a -> [(a, b)] -> [b]
+lka k = map p2 . filter ( (== k) . p1 )
+\end{code}
+
+%a funcao recebe um segmento e devolve uma lista com as probabilidades associadas a cada delay
+% mksd (S0, S1)
+% ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
+\begin{code}
+mksd :: Segment -> (Segment, Dist Delay)
+mksd = split id $ mkdist . flip lka dados
+\end{code}
+
+% primeiro criamos um map com os segmentos depois eliminamos os repetidos
+% e por fim aplicamos a funcao mksd a cada segmento
+% esta funcao devolve uma lista de tuplos com o segmento e a sua distribuicao
+\begin{code}
+db :: [(Segment, Dist Delay)]
+db = map mksd $ nub $ map p1 dados
+\end{code}
+
+% funcao que recebe uma lista e devolve uma distribuicao uniforme
+\begin{code}
+mkdist :: Eq a => [a] -> Dist a
+mkdist = uniform\end{code}
+\end{code}
+
+% funcao que recebe um segmento e devolve a sua distribuicao de atrasos
+\begin{code}
+delay :: Segment -> Dist Delay
+delay =  fj . mkf db
+\end{code}
+
+\begin{code}
+fj :: Maybe a -> a
+fj (Just a) = a
+\end{code}
+
+\begin{code}
+pdelay = undefined
+\end{code}
+
+
+
+
+
+
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
