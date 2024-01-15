@@ -682,13 +682,12 @@ que sejam necessárias.
 \textbf{Importante}: Não pode ser alterado o texto deste ficheiro fora deste anexo.
 
 \subsection*{Problema 1}
-% rever texto
 
-     Para resolver este problema, chegamos á conclusão que tinhamos que guardar a primeira linha da matrix e depois rodar a 
-matrix 90 graus no sentido anti-horário e repetir o processo até que a matrix ficasse vazia.
+     Para resolver este problema, chegamos á conclusão que tínhamos que guardar a primeira linha da matrix e depois rodá-la 
+90 graus no sentido anti-horário e repetir o processo até que a mesma ficasse vazia.
 
      Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
-Esta função realiza duas operações principais em sequência: a transposição da matriz (transpose), 
+Esta função realiza duas operações principais: a transposição da matriz (transpose), 
 que troca as suas linhas por colunas, seguida pela inversão de cada nova linha (reverse). 
 O resultado é uma rotação de noventa graus no sentido anti-horário.
 
@@ -699,12 +698,10 @@ rotate = reverse . transpose
 
      O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
 em cada passo recursivo. Utilizando o combinador (id + id x rotate), que aplica a função 
-rotate ao resto da matriz apos separar a primeira linha. A cada iteração, anaRotate acumula 
+rotate ao resto da matriz após separar a primeira linha. A cada iteração, anaRotate acumula 
 a primeira linha da matriz transformada, construindo assim uma lista de listas, onde 
 cada sublista representa uma camada da espiral.
 O diagrama de anamorfismo abaixo visualiza este processo.
-
-
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
@@ -718,9 +715,10 @@ anaRotate :: Eq a => [[a]] -> [[a]]
 anaRotate = anaList ( (id -|- id >< rotate) . outList)
 \end{code}
 
-Para alcançar a representação final da matriz em espiral, utilizamos a função concat, 
+Para alcançar a representação final da matriz em espiral, utilizámos a função concat, 
 que concatena todas as sublistas numa única lista. O diagrama a seguir ilustra a 
-aplicação de concat à estrutura produzida por anaRotate, resultando na lista final que pertendemos obter com a função matrot.
+aplicação de concat à estrutura produzida por anaRotate, resultando na lista 
+final que pertendemos obter com a função matrot.
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
@@ -758,6 +756,7 @@ pre :: String -> String
 pre = conc . split id (filter isVowel)
 \end{code}
 
+
 Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
 é o resultado da função pre, ou seja, as vogais estão no fim da string. 
 
@@ -766,11 +765,37 @@ A anaReverse percorre essa lista e inverte elementos específicos, baseando-se n
 Dentro do anamorfismo, a função ifp é usada com mecanismo de decisão que aplica o 
 predicado p a cada elemento da lista, quando o elemento é uma vogal a função ifp aplica um
 split, substituíndo o elemento em questão pelo último elemento da lista e removendo o mesmo. 
-
 Isso resulta na inversão da posição das vogais dentro da lista. 
 
-Se o elemento não satisfizer o predicado, ele é mantido em sua posição original, e a função procede para o 
+Se o elemento não satisfizer o predicado, é mantido na sua posição original, e a função procede para o 
 próximo elemento da lista.
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm @@R=2cm{
+     A & \ar[l]_{\pi_1} A \times A^* \ar[r]^{\pi_2} & A^*  \\
+     & A^* \ar[u]^{|split last init|} \ar[ul]^{last} \ar[ur]_{init} &
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+|
+	ifp = either (split last init . p2) id . (p . p1)?
+|
+\just\equiv{ Def condicional de McCarthy }
+|
+	ifp = Cp.cond (p . p1)  ( (split last init) . p2 ) id
+|
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=4cm @@R=3cm{
+     & A \times A^* \ar[d]_{p . \pi_1 ?} \\
+     A \times A^* \ar[dr]_{|split last init| . \pi_2} & \ar[r]^{|i2|} A \times A^* + A \times A^* \ar[d]_{|either (split last init . p2) id|} \ar[l]_{|i1|} & A \times A^* \ar[dl]^{|id|} \\
+     & A \times A^*  &
+}
+\end{eqnarray*}
+
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
@@ -779,6 +804,8 @@ próximo elemento da lista.
  }
 \end{eqnarray*}
 
+\clearpage
+
 % se receber "acidosaio" devolve no fim "ocidas"
 \begin{code}
 anaReverse :: Eq a => [a] -> [a]
@@ -786,6 +813,9 @@ anaReverse p = (anaList ((id -|- ifp) . outList))
      where 
           ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
 \end{code}
+
+
+
 
 \begin{code}
 reverseVowels :: String -> String
@@ -861,32 +891,28 @@ instantaneous :: Dist Delay
 instantaneous = D [ (0,1) ]
 \end{code}
 
-A função lka é uma função auxiliar que recebe um segmento e uma lista de dados 
-e devolve uma lista com os atrasos associados a esse segmento
 
+Para auxiliar a geração da base de dados probabilística, criamos 3 funções auxiliares.
+
+\begin{itemize}
+\item A função lka recebe um segmento e uma lista de dados e devolve uma lista com os atrasos associados a esse segmento
 % lka (S3, S4) dados -> [2,3,5,2,0]
 \begin{code}
 lka :: Eq a => a -> [(a, b)] -> [b]
 lka k = map p2 . filter ( (== k) . p1 )
-\end{code}
-
-Para auxiliar a geração da base de dados probabilística, usamos a função mkdist que faz o sumário 
-estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
-
+\end{code}	
+\item A função mkdist faz o sumário estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
 \begin{code}
 mkdist :: Eq a => [a] -> Dist a
 mkdist = uniform
 \end{code}
-
-Definimos também outra função auxiliar, a função mksd que começa por aplicar a função lka aos dados, 
-de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist 
-a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
-
+\item A função mksd começa por aplicar a função lka aos dados, de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
 % mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{code}
 mksd :: Segment -> (Segment, Dist Delay)
 mksd = split id $ mkdist . flip lka dados
 \end{code}
+\end{itemize}
 
 Por fim para gerar a base de dados probabilística, começamos por extrair os segmentos dos dados 
 e eliminar os repetidos, de forma a obter uma lista de segmentos.
@@ -898,7 +924,6 @@ devolvendo assim uma lista de tuplos com o segmento e a sua respetiva distribui�
 db :: [(Segment, Dist Delay)]
 db = map mksd $ nub $ map p1 dados
 \end{code}
-
 
 Esta função começa por procurar o segmento na base de dados probabilística, e caso o encontre, 
 devolve a sua distribuição de atrasos.
@@ -920,11 +945,6 @@ linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 \begin{code}
 pdelay = undefined
 \end{code}
-
-
-
-
-
 
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%

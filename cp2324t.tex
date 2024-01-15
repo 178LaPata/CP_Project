@@ -891,13 +891,12 @@ que sejam necessárias.
 \textbf{Importante}: Não pode ser alterado o texto deste ficheiro fora deste anexo.
 
 \subsection*{Problema 1}
-% rever texto
 
-     Para resolver este problema, chegamos á conclusão que tinhamos que guardar a primeira linha da matrix e depois rodar a 
-matrix 90 graus no sentido anti-horário e repetir o processo até que a matrix ficasse vazia.
+     Para resolver este problema, chegamos á conclusão que tínhamos que guardar a primeira linha da matrix e depois rodá-la 
+90 graus no sentido anti-horário e repetir o processo até que a mesma ficasse vazia.
 
      Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
-Esta função realiza duas operações principais em sequência: a transposição da matriz (transpose), 
+Esta função realiza duas operações principais: a transposição da matriz (transpose), 
 que troca as suas linhas por colunas, seguida pela inversão de cada nova linha (reverse). 
 O resultado é uma rotação de noventa graus no sentido anti-horário.
 
@@ -912,12 +911,10 @@ O resultado é uma rotação de noventa graus no sentido anti-horário.
 
      O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
 em cada passo recursivo. Utilizando o combinador (id + id x rotate), que aplica a função 
-rotate ao resto da matriz apos separar a primeira linha. A cada iteração, anaRotate acumula 
+rotate ao resto da matriz após separar a primeira linha. A cada iteração, anaRotate acumula 
 a primeira linha da matriz transformada, construindo assim uma lista de listas, onde 
 cada sublista representa uma camada da espiral.
 O diagrama de anamorfismo abaixo visualiza este processo.
-
-
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -935,9 +932,10 @@ O diagrama de anamorfismo abaixo visualiza este processo.
 \ColumnHook
 \end{hscode}\resethooks
 
-Para alcançar a representação final da matriz em espiral, utilizamos a função concat, 
+Para alcançar a representação final da matriz em espiral, utilizámos a função concat, 
 que concatena todas as sublistas numa única lista. O diagrama a seguir ilustra a 
-aplicação de concat à estrutura produzida por anaRotate, resultando na lista final que pertendemos obter com a função matrot.
+aplicação de concat à estrutura produzida por anaRotate, resultando na lista 
+final que pertendemos obter com a função matrot.
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -986,6 +984,7 @@ A função pre é definida como a composicao de conc e split, juntamente com fil
 \ColumnHook
 \end{hscode}\resethooks
 
+
 Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
 é o resultado da função pre, ou seja, as vogais estão no fim da string. 
 
@@ -994,11 +993,33 @@ A anaReverse percorre essa lista e inverte elementos específicos, baseando-se n
 Dentro do anamorfismo, a função ifp é usada com mecanismo de decisão que aplica o 
 predicado p a cada elemento da lista, quando o elemento é uma vogal a função ifp aplica um
 split, substituíndo o elemento em questão pelo último elemento da lista e removendo o mesmo. 
-
 Isso resulta na inversão da posição das vogais dentro da lista. 
 
-Se o elemento não satisfizer o predicado, ele é mantido em sua posição original, e a função procede para o 
+Se o elemento não satisfizer o predicado, é mantido na sua posição original, e a função procede para o 
 próximo elemento da lista.
+
+\begin{eqnarray*}
+\xymatrix@C=3cm @R=2cm{
+     A & \ar[l]_{\pi_1} A \times A^* \ar[r]^{\pi_2} & A^*  \\
+     & A^* \ar[u]^{\ensuremath{\conj{\Varid{last}}{\Varid{init}}}} \ar[ul]^{last} \ar[ur]_{init} &
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+\ensuremath{\Varid{ifp}\mathrel{=}\alt{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}\comp (\Varid{p}\comp \p1)\mathbin{?}}
+\just\equiv{ Def condicional de McCarthy }
+\ensuremath{\Varid{ifp}\mathrel{=}\mcond{\Varid{p}\comp \p1}{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=4cm @R=3cm{
+     & A \times A^* \ar[d]_{p . \pi_1 ?} \\
+     A \times A^* \ar[dr]_{\ensuremath{\conj{\Varid{last}}{\Varid{init}}} . \pi_2} & \ar[r]^{\ensuremath{i_2}} A \times A^* + A \times A^* \ar[d]_{\ensuremath{\alt{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}}} \ar[l]_{\ensuremath{i_1}} & A \times A^* \ar[dl]^{\ensuremath{\Varid{id}}} \\
+     & A \times A^*  &
+}
+\end{eqnarray*}
+
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -1006,6 +1027,8 @@ próximo elemento da lista.
      (\ensuremath{\Conid{A}})^* && 1 + A \times{\mathbb{(\ensuremath{\Conid{A}})^*}}\ar[ll]^{ in_{Listas}} 
  }
 \end{eqnarray*}
+
+\clearpage
 
 % se receber "acidosaio" devolve no fim "ocidas"
 \begin{hscode}\SaveRestoreHook
@@ -1028,6 +1051,9 @@ próximo elemento da lista.
 \>[36]{}\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+
+
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1146,9 +1172,11 @@ Como tal,
 \ColumnHook
 \end{hscode}\resethooks
 
-A função lka é uma função auxiliar que recebe um segmento e uma lista de dados 
-e devolve uma lista com os atrasos associados a esse segmento
 
+Para auxiliar a geração da base de dados probabilística, criamos 3 funções auxiliares.
+
+\begin{itemize}
+\item A função lka recebe um segmento e uma lista de dados e devolve uma lista com os atrasos associados a esse segmento
 % lka (S3, S4) dados -> [2,3,5,2,0]
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1158,10 +1186,7 @@ e devolve uma lista com os atrasos associados a esse segmento
 \>[B]{}\Varid{lka}\;\Varid{k}\mathrel{=}\map \;\p2\comp \Varid{filter}\;((\equiv \Varid{k})\comp \p1){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
-Para auxiliar a geração da base de dados probabilística, usamos a função mkdist que faz o sumário 
-estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
-
+\item A função mkdist faz o sumário estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1170,11 +1195,7 @@ estatístico de uma qualquer lista finita, gerando a distribuição de ocorrênc
 \>[B]{}\Varid{mkdist}\mathrel{=}\Varid{uniform}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
-Definimos também outra função auxiliar, a função mksd que começa por aplicar a função lka aos dados, 
-de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist 
-a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
-
+\item A função mksd começa por aplicar a função lka aos dados, de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
 % mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1184,6 +1205,7 @@ a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse se
 \>[B]{}\Varid{mksd}\mathrel{=}\conj{\Varid{id}}{\cdot }\mathbin{\$}\Varid{mkdist}\comp \Varid{flip}\;\Varid{lka}\;\Varid{dados}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+\end{itemize}
 
 Por fim para gerar a base de dados probabilística, começamos por extrair os segmentos dos dados 
 e eliminar os repetidos, de forma a obter uma lista de segmentos.
@@ -1199,7 +1221,6 @@ devolvendo assim uma lista de tuplos com o segmento e a sua respetiva distribui�
 \>[B]{}\Varid{db}\mathrel{=}\map \;\Varid{mksd}\mathbin{\$}\Varid{nub}\mathbin{\$}\map \;\p1\;\Varid{dados}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
 
 Esta função começa por procurar o segmento na base de dados probabilística, e caso o encontre, 
 devolve a sua distribuição de atrasos.
@@ -1234,11 +1255,6 @@ linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 \>[B]{}\Varid{pdelay}\mathrel{=}\bot {}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
-
-
-
-
 
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
