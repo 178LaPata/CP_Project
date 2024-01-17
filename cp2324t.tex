@@ -892,10 +892,10 @@ que sejam necessárias.
 
 \subsection*{Problema 1}
 
-     Para resolver este problema, chegamos á conclusão que tínhamos que guardar a primeira linha da matrix e depois rodá-la 
+Para resolver este problema, chegamos á conclusão que tínhamos que guardar a primeira linha da matrix e depois rodá-la 
 90 graus no sentido anti-horário e repetir o processo até que a mesma ficasse vazia.
 
-     Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
+Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
 Esta função realiza duas operações principais: a transposição da matriz (transpose), 
 que troca as suas linhas por colunas, seguida pela inversão de cada nova linha (reverse). 
 O resultado é uma rotação de noventa graus no sentido anti-horário.
@@ -909,7 +909,7 @@ O resultado é uma rotação de noventa graus no sentido anti-horário.
 \ColumnHook
 \end{hscode}\resethooks
 
-     O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
+O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
 em cada passo recursivo. Utilizando o combinador (id + id x rotate), que aplica a função 
 rotate ao resto da matriz após separar a primeira linha. A cada iteração, anaRotate acumula 
 a primeira linha da matriz transformada, construindo assim uma lista de listas, onde 
@@ -943,9 +943,9 @@ final que pertendemos obter com a função matrot.
 }
 \end{eqnarray*}
 
-A função matrot é definida como a composição de concat e anaRotate. Esta única linha de 
-Haskell encapsula todo o processo de transformação da matriz original para a lista espiralada, 
-como demonstrado pela equivalência a seguir.
+A função matrot é definida como a composição de concat e anaRotate. Esta única linha
+encapsula todo o processo de transformação da matriz original numa lista 
+com os elementos rodados em espiral, como demonstrado pela equivalência a seguir.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -984,7 +984,6 @@ A função pre é definida como a composicao de conc e split, juntamente com fil
 \ColumnHook
 \end{hscode}\resethooks
 
-
 Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
 é o resultado da função pre, ou seja, as vogais estão no fim da string. 
 
@@ -995,7 +994,7 @@ predicado p a cada elemento da lista, quando o elemento é uma vogal a função 
 split, substituíndo o elemento em questão pelo último elemento da lista e removendo o mesmo. 
 Isso resulta na inversão da posição das vogais dentro da lista. 
 
-Se o elemento não satisfizer o predicado, é mantido na sua posição original, e a função procede para o 
+Se o elemento não satisfizer o predicado, é mantido na sua posição original e a função procede para o 
 próximo elemento da lista.
 
 \begin{eqnarray*}
@@ -1062,7 +1061,6 @@ próximo elemento da lista.
 
 Na segunda parte do Problema 2 é pedido para generalizar a função inicial,
 de forma a inverter os elementos de uma dada lista que satisfazem um dado predicado.
-Como tal, 
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -1084,11 +1082,11 @@ Como tal,
 Começamos por analisar a diferença entre duas iterações consecutivas do somatório:
 
 \begin{align}
-     iteração k &= \frac{x^{(2k+1)}}{(2k+1)!} \
+     iteracao k &= \frac{x^{(2k+1)}}{(2k+1)!} \
 \end{align}
 
 \begin{align}
-     iteração (k+1) &= \frac{x^{(2(k+1)+1)}}{(2(k+1)+1)!} \
+     iteracao (k+1) &= \frac{x^{(2(k+1)+1)}}{(2(k+1)+1)!} \
      &= \frac{x^{(2k+3)}}{(2k+3)!} \
      &= \frac{x^{(2k+1)} \times x^2}{(2k+3)(2k+2)(2k+1)!}
 \end{align}
@@ -1113,23 +1111,23 @@ Nos restantes casos, a função loop recebe o acumulador e retorna um novo acumu
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{den2}\mathbin{::}\Conid{Num}\;\Varid{a}\Rightarrow \Varid{a}\to \Varid{a}{}\<[E]%
+\>[B]{}\Varid{den}\mathbin{::}\Conid{Num}\;\Varid{a}\Rightarrow \Varid{a}\to \Varid{a}{}\<[E]%
 \\
-\>[B]{}\Varid{den2}\;\Varid{i}{}\<[9]%
-\>[9]{}\mathrel{=}(\mathrm{2}\mathbin{*}\Varid{i}\mathbin{+}\mathrm{2})\mathbin{*}(\mathrm{2}\mathbin{*}\Varid{i}\mathbin{+}\mathrm{3}){}\<[E]%
+\>[B]{}\Varid{den}\;\Varid{i}{}\<[8]%
+\>[8]{}\mathrel{=}(\mathrm{2}\mathbin{*}\Varid{i}\mathbin{+}\mathrm{2})\mathbin{*}(\mathrm{2}\mathbin{*}\Varid{i}\mathbin{+}\mathrm{3}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{num2}\mathbin{::}\Conid{Num}\;\Varid{a}\Rightarrow \Varid{a}\to \Varid{a}{}\<[E]%
+\>[B]{}\Varid{num}\mathbin{::}\Conid{Num}\;\Varid{a}\Rightarrow \Varid{a}\to \Varid{a}{}\<[E]%
 \\
-\>[B]{}\Varid{num2}\;\Varid{x}{}\<[9]%
-\>[9]{}\mathrel{=}\Varid{x}\mathbin{\uparrow}\mathrm{2}{}\<[E]%
+\>[B]{}\Varid{num}\;\Varid{x}{}\<[8]%
+\>[8]{}\mathrel{=}\Varid{x}\mathbin{\uparrow}\mathrm{2}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1146,14 +1144,14 @@ Nos restantes casos, a função loop recebe o acumulador e retorna um novo acumu
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathbf{where}\;\Varid{conta}\mathrel{=}\Varid{p}\mathbin{*}{}\<[24]%
-\>[24]{}(\Varid{num2}\;\Varid{x}\mathbin{/}\Varid{den2}\;\Varid{i}){}\<[E]%
+\>[24]{}(\Varid{num}\;\Varid{x}\mathbin{/}\Varid{den}\;\Varid{i}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \begin{eqnarray*}
 \xymatrix@C=7cm @R=2cm{
      \N_0 \ar[r]^{out_{\N_0}}\ar[d]_{\ensuremath{\Varid{worker}}} & 1+ \N_0\ar[d]^{id +\ensuremath{\Varid{worker}}} \\
-     (\N_0 \times{\N_0}) \times{\N_0} & 1+ (\N_0 \times{\N_0}) \times{\N_0}\ar[l]^{\ensuremath{\alt{\underline{\Varid{start}}}{\Varid{loop}}}} 
+     (\N_0 \times{\N_0}) \times{\N_0} & 1+ (\N_0 \times{\N_0}) \times{\N_0}\ar[l]^{\ensuremath{\alt{\underline{\Varid{start}}\;\Varid{x}}{\Varid{loop}\;\Varid{x}}}} 
 }
 \end{eqnarray*}
 
@@ -1161,7 +1159,7 @@ Nos restantes casos, a função loop recebe o acumulador e retorna um novo acumu
 \start
 \ensuremath{\Varid{worker}\mathrel{=}\for{\Varid{loop}\;\Varid{x}}\ {\Varid{start}\;\Varid{x}}}
 \just\equiv{ Def ciclo-for }
-\ensuremath{\Varid{worker}\mathrel{=}\llparenthesis\, \alt{\underline{\Varid{start}}}{\Varid{loop}}\,\rrparenthesis}
+\ensuremath{\Varid{worker}\mathrel{=}\llparenthesis\, \alt{\underline{\Varid{start}}\;\Varid{x}}{\Varid{loop}\;\Varid{x}}\,\rrparenthesis}
 \end{eqnarray*}
 
 

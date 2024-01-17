@@ -683,10 +683,10 @@ que sejam necessárias.
 
 \subsection*{Problema 1}
 
-     Para resolver este problema, chegamos á conclusão que tínhamos que guardar a primeira linha da matrix e depois rodá-la 
+Para resolver este problema, chegamos á conclusão que tínhamos que guardar a primeira linha da matrix e depois rodá-la 
 90 graus no sentido anti-horário e repetir o processo até que a mesma ficasse vazia.
 
-     Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
+Primeiramente, definimos a função rotate, que é a base para a construção da espiral. 
 Esta função realiza duas operações principais: a transposição da matriz (transpose), 
 que troca as suas linhas por colunas, seguida pela inversão de cada nova linha (reverse). 
 O resultado é uma rotação de noventa graus no sentido anti-horário.
@@ -696,7 +696,7 @@ rotate :: Eq a => [[a]] -> [[a]]
 rotate = reverse . transpose
 \end{code}
 
-     O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
+O núcleo da nossa estratégia é a função anaRotate, um anamorfismo que emprega a rotate 
 em cada passo recursivo. Utilizando o combinador (id + id x rotate), que aplica a função 
 rotate ao resto da matriz após separar a primeira linha. A cada iteração, anaRotate acumula 
 a primeira linha da matriz transformada, construindo assim uma lista de listas, onde 
@@ -726,9 +726,9 @@ final que pertendemos obter com a função matrot.
 }
 \end{eqnarray*}
 
-A função matrot é definida como a composição de concat e anaRotate. Esta única linha de 
-Haskell encapsula todo o processo de transformação da matriz original para a lista espiralada, 
-como demonstrado pela equivalência a seguir.
+A função matrot é definida como a composição de concat e anaRotate. Esta única linha
+encapsula todo o processo de transformação da matriz original numa lista 
+com os elementos rodados em espiral, como demonstrado pela equivalência a seguir.
 
 \begin{code}
 matrot :: Eq a => [[a]] -> [a]
@@ -756,7 +756,6 @@ pre :: String -> String
 pre = conc . split id (filter isVowel)
 \end{code}
 
-
 Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
 é o resultado da função pre, ou seja, as vogais estão no fim da string. 
 
@@ -767,7 +766,7 @@ predicado p a cada elemento da lista, quando o elemento é uma vogal a função 
 split, substituíndo o elemento em questão pelo último elemento da lista e removendo o mesmo. 
 Isso resulta na inversão da posição das vogais dentro da lista. 
 
-Se o elemento não satisfizer o predicado, é mantido na sua posição original, e a função procede para o 
+Se o elemento não satisfizer o predicado, é mantido na sua posição original e a função procede para o 
 próximo elemento da lista.
 
 \begin{eqnarray*}
@@ -820,7 +819,6 @@ reverseVowels = reverseByPredicate isVowel
 
 Na segunda parte do Problema 2 é pedido para generalizar a função inicial,
 de forma a inverter os elementos de uma dada lista que satisfazem um dado predicado.
-Como tal, 
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
@@ -838,11 +836,11 @@ reverseByPredicate p = anaReverse p . pre
 Começamos por analisar a diferença entre duas iterações consecutivas do somatório:
 
 \begin{align}
-     iteração k &= \frac{x^{(2k+1)}}{(2k+1)!} \
+     iteracao k &= \frac{x^{(2k+1)}}{(2k+1)!} \
 \end{align}
 
 \begin{align}
-     iteração (k+1) &= \frac{x^{(2(k+1)+1)}}{(2(k+1)+1)!} \
+     iteracao (k+1) &= \frac{x^{(2(k+1)+1)}}{(2(k+1)+1)!} \
      &= \frac{x^{(2k+3)}}{(2k+3)!} \
      &= \frac{x^{(2k+1)} \times x^2}{(2k+3)(2k+2)(2k+1)!}
 \end{align}
@@ -862,25 +860,25 @@ start x = ((x,x),0)
 Nos restantes casos, a função loop recebe o acumulador e retorna um novo acumulador com os valores atualizados.
 
 \begin{code}
-den2 :: Num a => a -> a
-den2 i  = (2*i + 2) * (2*i + 3)
+den :: Num a => a -> a
+den i  = (2*i + 2) * (2*i + 3)
 \end{code}
 
 \begin{code}
-num2 :: Num a => a -> a
-num2 x  = x ^ 2
+num :: Num a => a -> a
+num x  = x ^ 2
 \end{code}
 
 \begin{code}
 loop :: Fractional b => b -> ((b, b), b) -> ((b, b), b)
 loop  x ((s,p),i) = ((s + conta, conta), i+1 )
-    where conta = p *  (num2 x / den2 i)
+    where conta = p *  (num x / den i)
 \end{code}
 
 \begin{eqnarray*}
 \xymatrix@@C=7cm @@R=2cm{
      \N_0 \ar[r]^{out_{\N_0}}\ar[d]_{|worker|} & 1+ \N_0\ar[d]^{id +|worker|} \\
-     (\N_0 \times{\N_0}) \times{\N_0} & 1+ (\N_0 \times{\N_0}) \times{\N_0}\ar[l]^{|either (const start) loop|} 
+     (\N_0 \times{\N_0}) \times{\N_0} & 1+ (\N_0 \times{\N_0}) \times{\N_0}\ar[l]^{|either (const start x) (loop x)|} 
 }
 \end{eqnarray*}
 
@@ -891,7 +889,7 @@ loop  x ((s,p),i) = ((s + conta, conta), i+1 )
 |
 \just\equiv{ Def ciclo-for }
 |
-	worker  = cataList (either (const start) loop)
+	worker  = cataList (either (const start x) (loop x))
 |
 \end{eqnarray*}
 
