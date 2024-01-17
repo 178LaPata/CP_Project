@@ -1103,7 +1103,9 @@ Como tal,
 \ColumnHook
 \end{hscode}\resethooks
 
-
+f x 0 = (x,x,1)
+f x i = (l+ (a/b),a,b )
+     where (l,a,b) =  (l,(x ** 2 * x_) , (2*(i-1)+3)*(2*(i-1)+2)* y_ )  where (l,x_,y_) = f x (i-1) 
 
 
 
@@ -1202,7 +1204,7 @@ Para auxiliar a geração da base de dados probabilística, criamos 3 funções 
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{mksd}\mathbin{::}\Conid{Segment}\to (\Conid{Segment},\fun{Dist}\;\Conid{Delay}){}\<[E]%
 \\
-\>[B]{}\Varid{mksd}\mathrel{=}\conj{\Varid{id}}{\cdot }\mathbin{\$}\Varid{mkdist}\comp \Varid{flip}\;\Varid{lka}\;\Varid{dados}{}\<[E]%
+\>[B]{}\Varid{mksd}\mathrel{=}\conj{\Varid{id}}{\Varid{mkdist}\comp \Varid{flip}\;\Varid{lka}\;\Varid{dados}}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 \end{itemize}
@@ -1252,11 +1254,34 @@ linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{pdelay}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{somatorio}\mathbin{::}[\mskip1.5mu \Conid{Segment}\mskip1.5mu]\to \fun{Dist}\;\Conid{Delay}{}\<[E]%
+\\
+\>[B]{}\Varid{somatorio}\mathrel{=}\llparenthesis\, \alt{\underline{\Varid{instantaneous}}}{\uncurry{(\Varid{joinWith}\;(\mathbin{+})\comp \Varid{delay})}}\,\rrparenthesis{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
+\begin{eqnarray*}
+\xymatrix@C=7cm @R=2cm{
+  Segment^* \ar[r]^{out_{Listas}}\ar[d]_{\ensuremath{\Varid{somatorio}}} & 1+Segment\times{Segment^*}\ar[d]^{id +id \times{\ensuremath{\Varid{somatorio}}}} \\
+  Dist Delay & 1+Segment \times{Dist Delay}\ar[l]^{\ensuremath{\alt{\underline{\Varid{instantaneous}}}{\uncurry{(\Varid{joinWith}\;(\mathbin{+})\comp \Varid{delay})}}}} 
+ }
+\end{eqnarray*}
 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{59}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pdelay}\mathbin{::}\Conid{Stop}\to \Conid{Stop}\to \fun{Dist}\;\Conid{Delay}{}\<[E]%
+\\
+\>[B]{}\Varid{pdelay}\;\Varid{a}\;\Varid{b}\mathrel{=}\Varid{somatorio}\mathbin{\$}{}\<[27]%
+\>[27]{}\uncurry{\Varid{zip}}\mathbin{\$}{}\<[42]%
+\>[42]{}\conj{\Varid{id}}{\Varid{tail}}\mathbin{\$}{}\<[59]%
+\>[59]{}\Varid{enumFromTo}\;\Varid{a}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
 \printindex

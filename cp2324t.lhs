@@ -840,22 +840,19 @@ reverseByPredicate p = anaReverse p . pre
 \subsection*{Problema 3}
 
 \begin{code}
+snh x = wrapper . worker
+    where
+        worker  = for (loop x) (start x)
+        wrapper = p1 . p1
 
-snh x = wrapper . worker where
-        worker = for ((loop x)) ((start x))
-        wrapper = undefined
+loop  x ((s,p),i) = ((s + conta, conta ), i+1 )
+    where conta = p *  (num2 x / den2 i )
 
-loop = undefined
+start x = ((x,x),0)
 
-start = undefined
-
+den2 i  = (2*i + 2) * (2*i + 3 )
+num2 x  = x^2
 \end{code}
-
-
-
-
-
-
 
 
 \subsection*{Problema 4}
@@ -910,7 +907,7 @@ mkdist = uniform
 % mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{code}
 mksd :: Segment -> (Segment, Dist Delay)
-mksd = split id $ mkdist . flip lka dados
+mksd = split id (mkdist . flip lka dados)
 \end{code}
 \end{itemize}
 
@@ -943,10 +940,22 @@ função probabilística deverá informar qualquer utente que queira ir da parag
 linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 
 \begin{code}
-pdelay = undefined
+somatorio :: [Segment] -> Dist Delay
+somatorio = cataList ( either (const instantaneous) (uncurry (joinWith (+) . delay)))
 \end{code}
 
+\begin{eqnarray*}
+\xymatrix@@C=7cm @@R=2cm{
+  Segment^* \ar[r]^{out_{Listas}}\ar[d]_{|somatorio|} & 1+Segment\times{Segment^*}\ar[d]^{id +id \times{|somatorio|}} \\
+  Dist Delay & 1+Segment \times{Dist Delay}\ar[l]^{|either (const instantaneous) (uncurry (joinWith (+) . delay))|} 
+ }
+\end{eqnarray*}
 
+
+\begin{code}
+pdelay :: Stop -> Stop -> Dist Delay
+pdelay a b = somatorio $  uncurry zip $  split id tail $  enumFromTo a b
+\end{code}
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
 \printindex
