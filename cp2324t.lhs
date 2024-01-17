@@ -705,8 +705,8 @@ O diagrama de anamorfismo abaixo visualiza este processo.
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
-     \mathbb{((|A|)^*)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaRotate|} & 1 + A^* \times{\mathbb{((|A|)^*)^*}}\ar[r]^{id + id \times{\mathbb{|rotate|}} } & 1 + A^* \times{\mathbb{((|A|)^*)^*}}\ar[d]^{id +id \times{|anaRotate|}} \\
-     (A^*)^* && 1 + A^* \times{\mathbb{((|A|)^*)^*}}\ar[ll]^{ in_{Listas}} 
+     \mathbb{(|A|^*)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaRotate|} & 1 + A^* \times{\mathbb{(|A|^*)^*}}\ar[r]^{id + id \times{\mathbb{|rotate|}} } & 1 + A^* \times{\mathbb{(|A|^*)^*}}\ar[d]^{id +id \times{|anaRotate|}} \\
+     (A^*)^* && 1 + A^* \times{\mathbb{(|A|^*)^*}}\ar[ll]^{ in_{Listas}} 
  }
 \end{eqnarray*}
 
@@ -722,7 +722,7 @@ final que pertendemos obter com a função matrot.
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
-     ((|A|)^*)^*\ar@@/_1.5pc/[rr]_{|matrot|}\ar[r]^(0.50){|anaRotate|} & ((|A|)^*)^*\ar[r]^(0.50){|concat|} & (|A|)^*
+     (|A|^*)^*\ar@@/_1.5pc/[rr]_{|matrot|}\ar[r]^(0.50){|anaRotate|} & (|A|^*)^*\ar[r]^(0.50){|concat|} & |A|^*
 }
 \end{eqnarray*}
 
@@ -798,8 +798,8 @@ próximo elemento da lista.
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
-     \mathbb{(|A|)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaReverse|} & 1 + A \times{\mathbb{(|A|)^*}}\ar[r]^{id + ifp} & 1 + A \times{\mathbb{(|A|)^*}}\ar[d]^{id +id \times{|anaReverse|}} \\
-     (|A|)^* && 1 + A \times{\mathbb{(|A|)^*}}\ar[ll]^{ in_{Listas}} 
+     \mathbb{|A|^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaReverse|} & 1 + A \times{\mathbb{|A|^*}}\ar[r]^{id + ifp} & 1 + A \times{\mathbb{|A|^*}}\ar[d]^{id +id \times{|anaReverse|}} \\
+     |A|^* && 1 + A \times{\mathbb{|A|^*}}\ar[ll]^{ in_{Listas}} 
  }
 \end{eqnarray*}
 
@@ -824,7 +824,7 @@ Como tal,
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{
-     (|A|)^*\ar@@/_1.5pc/[rr]_{|reverseByPredicate|}\ar[r]^(0.50){|pre|} & (|A|)^*\ar[r]^(0.50){|anaReverse|} & (|A|)^*
+     |A|^*\ar@@/_1.5pc/[rr]_{|reverseByPredicate|}\ar[r]^(0.50){|pre|} & |A|^*\ar[r]^(0.50){|anaReverse|} & |A|^*
 }
 \end{eqnarray*}
 
@@ -998,12 +998,21 @@ fj :: Maybe a -> a
 fj (Just a) = a
 \end{code} 
 
+A pdelay é uma função probabilística que deverá informar qualquer utente que queira ir da paragem a até à paragem b de uma dada
+linha sobre a probabilidade de atraso acumulado no total do percurso [a..b].
 
-função probabilística deverá informar qualquer utente que queira ir da paragem a até à paragem b de uma dada
-linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
+Esta função recebe duas paragens e devolve a distribuição de atrasos acumulados entre as mesmas.
+De modo a realizarmos o pretendido, começamos por calcular a lista de segmentos de todas as 
+paragens entre as duas paragens dadas.
 
-Para fazermos a fun
+Para tal, utilizámos a função enumFromTo que devolve uma lista com todas as paragens entre a e b,
+de seguida aplicamos um split id tail e juntamos para obter a lista de segmentos entre essas duas paragens.
 
+Posteriormente, aplicamos a função somatorio que recebe a lista de segmentos 
+e devolve a distribuição de atrasos acumulados entre os mesmos.
+
+Esta função aplica a cada segmento a função delay e soma essa distribuição
+com a distribuição de atrasos do resto do percurso que foi calculada recursivamente pelo catamorfismo.
 
 \begin{eqnarray*}
 \xymatrix@@C=7cm @@R=2cm{
