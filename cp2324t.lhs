@@ -1002,6 +1002,8 @@ fj (Just a) = a
 função probabilística deverá informar qualquer utente que queira ir da paragem a até à paragem b de uma dada
 linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 
+Para fazermos a fun
+
 
 \begin{eqnarray*}
 \xymatrix@@C=7cm @@R=2cm{
