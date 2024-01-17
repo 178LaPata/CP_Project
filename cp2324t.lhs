@@ -813,9 +813,6 @@ anaReverse p = (anaList ((id -|- ifp) . outList))
           ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
 \end{code}
 
-
-
-
 \begin{code}
 reverseVowels :: String -> String
 reverseVowels = reverseByPredicate isVowel
@@ -838,21 +835,78 @@ reverseByPredicate p = anaReverse p . pre
 
 \subsection*{Problema 3}
 
+Começamos por analisar a diferença entre duas iterações consecutivas do somatório:
+
+\begin{align}
+     iteração k &= \frac{x^{(2k+1)}}{(2k+1)!} \
+\end{align}
+
+\begin{align}
+     iteração (k+1) &= \frac{x^{(2(k+1)+1)}}{(2(k+1)+1)!} \
+     &= \frac{x^{(2k+3)}}{(2k+3)!} \
+     &= \frac{x^{(2k+1)} \times x^2}{(2k+3)(2k+2)(2k+1)!}
+\end{align}
+
+Como podemos ver, a diferença entre duas iterações consecutivas corresponde a multiplicação do elemento anterior com o valor 
+$\frac{x^2}{(2k+3)(2k+2)}$​, o que nos permite calcular o próximo elemento a partir do anterior de maneira eficiente.
+
+Nesta função guardamos num acumulador o somatório até à iteração atual, o valor da iteração anterior e o número da iteração. 
+
+No caso de paragem temos a função start que retorna um acumulador com os valores iniciais para a iteração 0, ou seja, ((x,x),0).
+
 \begin{code}
-snh x = wrapper . worker
-    where
-        worker  = for (loop x) (start x)
-        wrapper = p1 . p1
-
-loop  x ((s,p),i) = ((s + conta, conta ), i+1 )
-    where conta = p *  (num2 x / den2 i )
-
+start :: Num b1 => b2 -> ((b2, b2), b1)
 start x = ((x,x),0)
+\end{code}
+\clearpage
+Nos restantes casos, a função loop recebe o acumulador e retorna um novo acumulador com os valores atualizados.
 
-den2 i  = (2*i + 2) * (2*i + 3 )
-num2 x  = x^2
+\begin{code}
+den2 :: Num a => a -> a
+den2 i  = (2*i + 2) * (2*i + 3)
 \end{code}
 
+\begin{code}
+num2 :: Num a => a -> a
+num2 x  = x ^ 2
+\end{code}
+
+\begin{code}
+loop :: Fractional b => b -> ((b, b), b) -> ((b, b), b)
+loop  x ((s,p),i) = ((s + conta, conta), i+1 )
+    where conta = p *  (num2 x / den2 i)
+\end{code}
+
+\begin{eqnarray*}
+\xymatrix@@C=7cm @@R=2cm{
+     \N_0 \ar[r]^{out_{\N_0}}\ar[d]_{|worker|} & 1+ \N_0\ar[d]^{id +|worker|} \\
+     (\N_0 \times{\N_0}) \times{\N_0} & 1+ (\N_0 \times{\N_0}) \times{\N_0}\ar[l]^{|either (const start) loop|} 
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\start
+|
+	worker  = for (loop x) (start x)
+|
+\just\equiv{ Def ciclo-for }
+|
+	worker  = cataList (either (const start) loop)
+|
+\end{eqnarray*}
+
+
+Para devolver o valor do somatório, a função wrapper recebe o acumulador e retorna o valor do somatório, 
+ou seja, o primeiro elemento do acumulador.
+
+
+\begin{code}
+snh :: (Integral a, Fractional b) => b -> a -> b
+snh x = wrapper . worker
+    where
+        worker  = for (loop x) (start x) 
+        wrapper = p1 . p1
+\end{code}
 
 \subsection*{Problema 4}
 
@@ -896,12 +950,22 @@ Para auxiliar a geração da base de dados probabilística, criamos 3 funções 
 \begin{code}
 lka :: Eq a => a -> [(a, b)] -> [b]
 lka k = map p2 . filter ( (== k) . p1 )
-\end{code}	
+\end{code}
+	
 \item A função mkdist faz o sumário estatístico de uma qualquer lista finita, gerando a distribuição de ocorrência dos seus elementos.
+     Começamos por aplicar a função map, de forma a obter uma lista de tuplos com o elemento e a sua percentagem de ocorrências.
+     De seguida aplicamos a função nub, que remove os elementos repetidos da lista, e por fim aplicamos a D que transforma a lista de tuplos numa distribuição.
+     
 \begin{code}
 mkdist :: Eq a => [a] -> Dist a
-mkdist = uniform
+mkdist l =  D $ nub $ map ( (id >< divide) . dup )   l
+    where
+        divide x = fromIntegral (n x l) / fromIntegral t
+        t  = length l
+
+n x = length . filter (==x)
 \end{code}
+
 \item A função mksd começa por aplicar a função lka aos dados, de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
 % mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{code}
@@ -932,24 +996,24 @@ delay =  fj . mkf db
 \begin{code}
 fj :: Maybe a -> a
 fj (Just a) = a
-\end{code}
+\end{code} 
 
 
 função probabilística deverá informar qualquer utente que queira ir da paragem a até à paragem b de uma dada
 linha sobre a probabilidade de atraso acumulado no total do percurso [a ..b].
 
+
+\begin{eqnarray*}
+\xymatrix@@C=7cm @@R=2cm{
+     Segment^* \ar[r]^{out_{Listas}}\ar[d]_{|somatorio|} & 1+Segment\times{Segment^*}\ar[d]^{id +id \times{|somatorio|}} \\
+     Dist Delay & 1+Segment \times{Dist Delay}\ar[l]^{|either (const instantaneous) (uncurry (joinWith (+) . delay))|} 
+}
+\end{eqnarray*}
+
 \begin{code}
 somatorio :: [Segment] -> Dist Delay
 somatorio = cataList ( either (const instantaneous) (uncurry (joinWith (+) . delay)))
 \end{code}
-
-\begin{eqnarray*}
-\xymatrix@@C=7cm @@R=2cm{
-  Segment^* \ar[r]^{out_{Listas}}\ar[d]_{|somatorio|} & 1+Segment\times{Segment^*}\ar[d]^{id +id \times{|somatorio|}} \\
-  Dist Delay & 1+Segment \times{Dist Delay}\ar[l]^{|either (const instantaneous) (uncurry (joinWith (+) . delay))|} 
- }
-\end{eqnarray*}
-
 
 \begin{code}
 pdelay :: Stop -> Stop -> Dist Delay
