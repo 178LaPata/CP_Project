@@ -778,6 +778,14 @@ próximo elemento da lista.
 \end{eqnarray*}
 
 \begin{eqnarray*}
+\xymatrix@@C=4cm @@R=3cm{
+     & A \times A^* \ar[d]_{p . \pi_1 ?} \\
+     A \times A^* \ar[dr]_{|split last init| . \pi_2} & \ar[r]^{|i2|} A \times A^* + A \times A^* \ar[d]_{|either (split last init . p2) id|} \ar[l]_{|i1|} & A \times A^* \ar[dl]^{|id|} \\
+     & A \times A^*  &
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
 \start
 |
 	ifp = either (split last init . p2) id . (p . p1)?
@@ -787,15 +795,6 @@ próximo elemento da lista.
 	ifp = Cp.cond (p . p1)  ( (split last init) . p2 ) id
 |
 \end{eqnarray*}
-
-\begin{eqnarray*}
-\xymatrix@@C=4cm @@R=3cm{
-     & A \times A^* \ar[d]_{p . \pi_1 ?} \\
-     A \times A^* \ar[dr]_{|split last init| . \pi_2} & \ar[r]^{|i2|} A \times A^* + A \times A^* \ar[d]_{|either (split last init . p2) id|} \ar[l]_{|i1|} & A \times A^* \ar[dl]^{|id|} \\
-     & A \times A^*  &
-}
-\end{eqnarray*}
-
 
 \begin{eqnarray*}
 \xymatrix@@C=3cm @@R=2cm{

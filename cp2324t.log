@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.12.29)  17 JAN 2024 11:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.12.29)  17 JAN 2024 15:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1562,23 +1562,6 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 
 \openout7 = `cp2324t.ptb'.
 
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.1108      where (l,a,b) =  (l,(x ** 2 * x_
-                                            ) , (2*(i-1)+3)*(2*(i-1)+2)* y_ ...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.1109 
-       
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
 \openout7 = `cp2324t.ptb'.
 
 \openout7 = `cp2324t.ptb'.
@@ -1614,14 +1597,14 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 \openout7 = `cp2324t.ptb'.
 
  <xymatrix 2x2 182>
-\openout7 = `cp2324t.ptb'.
-
-
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
 [13]
+\openout7 = `cp2324t.ptb'.
+
+
 No file cp2324t.ind.
 No file cp2324t.bbl.
 
@@ -1640,10 +1623,10 @@ Package rerunfilecheck Info: File `cp2324t.out' has not changed.
 (rerunfilecheck)             Checksum: DA35CDC4B1C3D714246AA54FE45C0974;1793.
  ) 
 Here is how much of TeX's memory you used:
- 45216 strings out of 480171
- 974954 string characters out of 5894488
- 1521646 words of memory out of 5000000
- 62441 multiletter control sequences out of 15000+600000
+ 45236 strings out of 480171
+ 975232 string characters out of 5894488
+ 1523646 words of memory out of 5000000
+ 62461 multiletter control sequences out of 15000+600000
  741930 words of font info for 157 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  99i,21n,94p,3281b,841s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1694,7 +1677,7 @@ ublic/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
 blic/stmaryrd/stmary10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/st
 maryrd/stmary9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/xypic/xyat
 ip10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
-Output written on cp2324t.pdf (15 pages, 507235 bytes).
+Output written on cp2324t.pdf (15 pages, 507178 bytes).
 PDF statistics:
  318 PDF objects out of 1000 (max. 8388607)
  252 compressed objects within 3 object streams

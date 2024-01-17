@@ -1006,13 +1006,6 @@ próximo elemento da lista.
 \end{eqnarray*}
 
 \begin{eqnarray*}
-\start
-\ensuremath{\Varid{ifp}\mathrel{=}\alt{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}\comp (\Varid{p}\comp \p1)\mathbin{?}}
-\just\equiv{ Def condicional de McCarthy }
-\ensuremath{\Varid{ifp}\mathrel{=}\mcond{\Varid{p}\comp \p1}{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}}
-\end{eqnarray*}
-
-\begin{eqnarray*}
 \xymatrix@C=4cm @R=3cm{
      & A \times A^* \ar[d]_{p . \pi_1 ?} \\
      A \times A^* \ar[dr]_{\ensuremath{\conj{\Varid{last}}{\Varid{init}}} . \pi_2} & \ar[r]^{\ensuremath{i_2}} A \times A^* + A \times A^* \ar[d]_{\ensuremath{\alt{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}}} \ar[l]_{\ensuremath{i_1}} & A \times A^* \ar[dl]^{\ensuremath{\Varid{id}}} \\
@@ -1020,6 +1013,12 @@ próximo elemento da lista.
 }
 \end{eqnarray*}
 
+\begin{eqnarray*}
+\start
+\ensuremath{\Varid{ifp}\mathrel{=}\alt{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}\comp (\Varid{p}\comp \p1)\mathbin{?}}
+\just\equiv{ Def condicional de McCarthy }
+\ensuremath{\Varid{ifp}\mathrel{=}\mcond{\Varid{p}\comp \p1}{\conj{\Varid{last}}{\Varid{init}}\comp \p2}{\Varid{id}}}
+\end{eqnarray*}
 
 \begin{eqnarray*}
 \xymatrix@C=3cm @R=2cm{
@@ -1087,29 +1086,40 @@ Como tal,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{snh}\;\Varid{x}\mathrel{=}\Varid{wrapper}\comp \Varid{worker}\;\mathbf{where}{}\<[E]%
+\>[B]{}\Varid{snh}\;\Varid{x}\mathrel{=}\Varid{wrapper}\comp \Varid{worker}{}\<[E]%
 \\
-\>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{worker}\mathrel{=}\for{(\Varid{loop}\;\Varid{x})}\ {(\Varid{start}\;\Varid{x})}{}\<[E]%
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{wrapper}\mathrel{=}\bot {}\<[E]%
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{worker}{}\<[17]%
+\>[17]{}\mathrel{=}\for{\Varid{loop}\;\Varid{x}}\ {\Varid{start}\;\Varid{x}}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{wrapper}\mathrel{=}\p1\comp \p1{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{loop}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{loop}\;{}\<[7]%
+\>[7]{}\Varid{x}\;((\Varid{s},\Varid{p}),\Varid{i})\mathrel{=}((\Varid{s}\mathbin{+}\Varid{conta},\Varid{conta}),\Varid{i}\mathbin{+}\mathrm{1}){}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{conta}\mathrel{=}\Varid{p}\mathbin{*}{}\<[24]%
+\>[24]{}(\Varid{num2}\;\Varid{x}\mathbin{/}\Varid{den2}\;\Varid{i}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{start}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{start}\;\Varid{x}\mathrel{=}((\Varid{x},\Varid{x}),\mathrm{0}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{den2}\;\Varid{i}{}\<[9]%
+\>[9]{}\mathrel{=}(\mathrm{2}\mathbin{*}\Varid{i}\mathbin{+}\mathrm{2})\mathbin{*}(\mathrm{2}\mathbin{*}\Varid{i}\mathbin{+}\mathrm{3}){}\<[E]%
+\\
+\>[B]{}\Varid{num2}\;\Varid{x}{}\<[9]%
+\>[9]{}\mathrel{=}\Varid{x}\mathbin{\uparrow}\mathrm{2}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
-f x 0 = (x,x,1)
-f x i = (l+ (a/b),a,b )
-     where (l,a,b) =  (l,(x ** 2 * x_) , (2*(i-1)+3)*(2*(i-1)+2)* y_ )  where (l,x_,y_) = f x (i-1) 
-
-
-
-
 
 
 \subsection*{Problema 4}
