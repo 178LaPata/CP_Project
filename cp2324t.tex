@@ -920,7 +920,7 @@ O diagrama de anamorfismo abaixo visualiza este processo.
 \xymatrix@C=3cm @R=2cm{
      \mathbb{(\ensuremath{\Conid{A}}^*)^*}\ar[r]^{out_{Listas}}\ar[d]_{\ensuremath{\Varid{anaRotate}}} & 1 + A^* \times{\mathbb{(\ensuremath{\Conid{A}}^*)^*}}\ar[r]^{id + id \times{\mathbb{\ensuremath{\Varid{rotate}}}} } & 1 + A^* \times{\mathbb{(\ensuremath{\Conid{A}}^*)^*}}\ar[d]^{id +id \times{\ensuremath{\Varid{anaRotate}}}} \\
      (A^*)^* && 1 + A^* \times{\mathbb{(\ensuremath{\Conid{A}}^*)^*}}\ar[ll]^{ in_{Listas}} 
- }
+}
 \end{eqnarray*}
 
 \begin{hscode}\SaveRestoreHook
@@ -928,7 +928,7 @@ O diagrama de anamorfismo abaixo visualiza este processo.
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{anaRotate}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\Varid{anaRotate}\mathrel{=}\anaList{(\Varid{id}+\Varid{id}\times\Varid{rotate})\comp \Varid{outList}}{}\<[E]%
+\>[B]{}\Varid{anaRotate}\mathrel{=}\anaList{(\Varid{id}+\Varid{id}\times\Varid{\Conid{Main}.rotate})\comp \Varid{outList}}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -952,7 +952,7 @@ com os elementos rodados em espiral, como demonstrado pela equivalência a segui
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{matrot}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\Varid{matrot}\mathrel{=}\Varid{concat}\;(\Varid{anaRotate}){}\<[E]%
+\>[B]{}\Varid{matrot}\mathrel{=}\Varid{concat}\comp \Varid{anaRotate}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -977,10 +977,10 @@ A função pre é definida como a composicao de conc e split, juntamente com fil
 %"acidos" e devolve "acidosaio"
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{pre}\mathbin{::}\Conid{String}\to \Conid{String}{}\<[E]%
-\\
-\>[B]{}\Varid{pre}\mathrel{=}\mathsf{conc}\comp \conj{\Varid{id}}{\Varid{filter}\;\Varid{isVowel}}{}\<[E]%
+\>[B]{}\Varid{pre}\;{}\<[6]%
+\>[6]{}\Varid{p}\mathrel{=}\mathsf{conc}\comp \conj{\Varid{id}}{\Varid{filter}\;\Varid{p}}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1036,7 +1036,7 @@ próximo elemento da lista.
 \column{16}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{36}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{anaReverse}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu \Varid{a}\mskip1.5mu]\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{anaReverse}\mathbin{::}(\Varid{a2}\to \Conid{Bool})\to [\mskip1.5mu \Varid{a2}\mskip1.5mu]\to [\mskip1.5mu \Varid{a2}\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\Varid{anaReverse}\;\Varid{p}\mathrel{=}\anaList{(\Varid{id}+\Varid{ifp})\comp \Varid{outList}}{}\<[E]%
 \\
@@ -1073,7 +1073,7 @@ de forma a inverter os elementos de uma dada lista que satisfazem um dado predic
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{reverseByPredicate}\mathbin{::}(\Varid{a}\to \Conid{Bool})\to [\mskip1.5mu \Varid{a}\mskip1.5mu]\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\Varid{reverseByPredicate}\;\Varid{p}\mathrel{=}\Varid{anaReverse}\;\Varid{p}\comp \Varid{pre}{}\<[E]%
+\>[B]{}\Varid{reverseByPredicate}\;\Varid{p}\;\Varid{s}\mathrel{=}\Varid{anaReverse}\;\Varid{p}\mathbin{\$}\Varid{pre}\;\Varid{p}\;\Varid{s}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1169,88 +1169,27 @@ ou seja, o primeiro elemento do acumulador.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{snh}\mathbin{::}(\Conid{Integral}\;\Varid{a},\Conid{Fractional}\;\Varid{b})\Rightarrow \Varid{b}\to \Varid{a}\to \Varid{b}{}\<[E]%
 \\
 \>[B]{}\Varid{snh}\;\Varid{x}\mathrel{=}\Varid{wrapper}\comp \Varid{worker}{}\<[E]%
 \\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}{}\<[E]%
+\>[B]{}\hsindent{6}{}\<[6]%
+\>[6]{}\mathbf{where}{}\<[E]%
 \\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{worker}{}\<[17]%
-\>[17]{}\mathrel{=}\for{\Varid{loop}\;\Varid{x}}\ {\Varid{start}\;\Varid{x}}{}\<[E]%
+\>[6]{}\hsindent{5}{}\<[11]%
+\>[11]{}\Varid{worker}{}\<[19]%
+\>[19]{}\mathrel{=}\for{\Varid{loop}\;\Varid{x}}\ {\Varid{start}\;\Varid{x}}{}\<[E]%
 \\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{wrapper}\mathrel{=}\p1\comp \p1{}\<[E]%
+\>[6]{}\hsindent{5}{}\<[11]%
+\>[11]{}\Varid{wrapper}\mathrel{=}\p1\comp \p1{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \subsection*{Problema 4}
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mathbf{data}\;\Conid{Stop}\mathrel{=}\Conid{S0}\mid \Conid{S1}\mid \Conid{S2}\mid \Conid{S3}\mid \Conid{S4}\mid \Conid{S5}\;\mathbf{deriving}\;(\Conid{Show},\Conid{Eq},\Conid{Ord},\Conid{Enum}){}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mathbf{type}\;\Conid{Delay}\mathrel{=}\mathbb{Z}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mathbf{type}\;\Conid{Segment}\mathrel{=}(\Conid{Stop},\Conid{Stop}){}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\label{pg:dados}
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{dados}\mathrel{=}[\mskip1.5mu ((\Conid{S0},\Conid{S1}),\mathrm{0}),((\Conid{S0},\Conid{S1}),\mathrm{2}),((\Conid{S0},\Conid{S1}),\mathrm{0}),((\Conid{S0},\Conid{S1}),\mathrm{3}),((\Conid{S0},\Conid{S1}),\mathrm{3}),{}\<[E]%
-\\
-\>[B]{}\hsindent{10}{}\<[10]%
-\>[10]{}((\Conid{S1},\Conid{S2}),\mathrm{0}),((\Conid{S1},\Conid{S2}),\mathrm{2}),((\Conid{S1},\Conid{S2}),\mathrm{1}),((\Conid{S1},\Conid{S2}),\mathrm{1}),((\Conid{S1},\Conid{S2}),\mathrm{4}),{}\<[E]%
-\\
-\>[B]{}\hsindent{10}{}\<[10]%
-\>[10]{}((\Conid{S2},\Conid{S3}),\mathrm{2}),((\Conid{S2},\Conid{S3}),\mathrm{2}),((\Conid{S2},\Conid{S3}),\mathrm{4}),((\Conid{S2},\Conid{S3}),\mathrm{0}),((\Conid{S2},\Conid{S3}),\mathrm{5}),{}\<[E]%
-\\
-\>[B]{}\hsindent{10}{}\<[10]%
-\>[10]{}((\Conid{S3},\Conid{S4}),\mathrm{2}),((\Conid{S3},\Conid{S4}),\mathrm{3}),((\Conid{S3},\Conid{S4}),\mathrm{5}),((\Conid{S3},\Conid{S4}),\mathrm{2}),((\Conid{S3},\Conid{S4}),\mathrm{0}),{}\<[E]%
-\\
-\>[B]{}\hsindent{10}{}\<[10]%
-\>[10]{}((\Conid{S4},\Conid{S5}),\mathrm{0}),((\Conid{S4},\Conid{S5}),\mathrm{5}),((\Conid{S4},\Conid{S5}),\mathrm{0}),((\Conid{S4},\Conid{S5}),\mathrm{7}),((\Conid{S4},\Conid{S5}),\mathbin{-}\mathrm{1})\mskip1.5mu]{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{mkf}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu (\Varid{a},\Varid{b})\mskip1.5mu]\to \Varid{a}\to \Conid{Maybe}\;\Varid{b}{}\<[E]%
-\\
-\>[B]{}\Varid{mkf}\mathrel{=}\Varid{flip}\;\Varid{\Conid{Prelude}.lookup}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{instantaneous}\mathbin{::}\fun{Dist}\;\Conid{Delay}{}\<[E]%
-\\
-\>[B]{}\Varid{instantaneous}\mathrel{=}\Conid{D}\;[\mskip1.5mu (\mathrm{0},\mathrm{1})\mskip1.5mu]{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
 
 Para auxiliar a geração da base de dados probabilística, criamos 3 funções auxiliares.
 
@@ -1272,27 +1211,27 @@ Para auxiliar a geração da base de dados probabilística, criamos 3 funções 
      
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{13}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{54}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{57}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{mkdist}\mathbin{::}\Conid{Eq}\;\Varid{a}\Rightarrow [\mskip1.5mu \Varid{a}\mskip1.5mu]\to \fun{Dist}\;\Varid{a}{}\<[E]%
+\>[B]{}\mbox{\onelinecomment mkdist :: Eq a => [a] -> Dist a}{}\<[E]%
 \\
 \>[B]{}\Varid{mkdist}\;\Varid{l}\mathrel{=}{}\<[13]%
-\>[13]{}\Conid{D}\mathbin{\$}\Varid{nub}\mathbin{\$}\map \;((\Varid{id}\times\Varid{divide})\comp \Varid{dup})\;{}\<[54]%
-\>[54]{}\Varid{l}{}\<[E]%
+\>[13]{}\Conid{D}\mathbin{\$}\Varid{nub}\mathbin{\$}\map \;((\Varid{id}\times\Varid{divide})\comp \Varid{\Conid{Cp}.dup})\;{}\<[57]%
+\>[57]{}\Varid{l}{}\<[E]%
 \\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}{}\<[E]%
+\>[B]{}\hsindent{6}{}\<[6]%
+\>[6]{}\mathbf{where}{}\<[E]%
 \\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{divide}\;\Varid{x}\mathrel{=}\Varid{fromIntegral}\;(\Varid{n}\;\Varid{x}\;\Varid{l})\mathbin{/}\Varid{fromIntegral}\;\Varid{t}{}\<[E]%
+\>[6]{}\hsindent{5}{}\<[11]%
+\>[11]{}\Varid{divide}\;\Varid{x}\mathrel{=}\Varid{fromIntegral}\;(\Varid{n}\;\Varid{x}\;\Varid{l})\mathbin{/}\Varid{fromIntegral}\;\Varid{t}{}\<[E]%
 \\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{t}{}\<[12]%
-\>[12]{}\mathrel{=}\length \;\Varid{l}{}\<[E]%
+\>[6]{}\hsindent{5}{}\<[11]%
+\>[11]{}\Varid{t}{}\<[14]%
+\>[14]{}\mathrel{=}\length \;\Varid{l}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{n}\;\Varid{x}\mathrel{=}\length \comp \Varid{filter}\;(\equiv \Varid{x}){}\<[E]%
 \ColumnHook
@@ -1303,7 +1242,7 @@ Para auxiliar a geração da base de dados probabilística, criamos 3 funções 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{mksd}\mathbin{::}\Conid{Segment}\to (\Conid{Segment},\fun{Dist}\;\Conid{Delay}){}\<[E]%
+\>[B]{}\mbox{\onelinecomment  mksd :: Segment -> (Segment, Dist Delay)}{}\<[E]%
 \\
 \>[B]{}\Varid{mksd}\mathrel{=}\conj{\Varid{id}}{\Varid{mkdist}\comp \Varid{flip}\;\Varid{lka}\;\Varid{dados}}{}\<[E]%
 \ColumnHook
@@ -1319,7 +1258,7 @@ devolvendo assim uma lista de tuplos com o segmento e a sua respetiva distribui�
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{db}\mathbin{::}[\mskip1.5mu (\Conid{Segment},\fun{Dist}\;\Conid{Delay})\mskip1.5mu]{}\<[E]%
+\>[B]{}\mbox{\onelinecomment db :: [(Segment, Dist Delay)]}{}\<[E]%
 \\
 \>[B]{}\Varid{db}\mathrel{=}\map \;\Varid{mksd}\mathbin{\$}\Varid{nub}\mathbin{\$}\map \;\p1\;\Varid{dados}{}\<[E]%
 \ColumnHook
@@ -1332,7 +1271,7 @@ devolve a sua distribuição de atrasos.
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{10}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{delay}\mathbin{::}\Conid{Segment}\to \fun{Dist}\;\Conid{Delay}{}\<[E]%
+\>[B]{}\mbox{\onelinecomment  delay :: Segment -> Dist Delay}{}\<[E]%
 \\
 \>[B]{}\Varid{delay}\mathrel{=}{}\<[10]%
 \>[10]{}\Varid{fj}\comp \Varid{mkf}\;\Varid{db}{}\<[E]%
@@ -1386,7 +1325,7 @@ com a distribuição de atrasos do resto do percurso que foi calculada recursiva
 \column{42}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{59}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{pdelay}\mathbin{::}\Conid{Stop}\to \Conid{Stop}\to \fun{Dist}\;\Conid{Delay}{}\<[E]%
+\>[B]{}\mbox{\onelinecomment  pdelay :: Stop -> Stop -> Dist Delay}{}\<[E]%
 \\
 \>[B]{}\Varid{pdelay}\;\Varid{a}\;\Varid{b}\mathrel{=}\Varid{somatorio}\mathbin{\$}{}\<[27]%
 \>[27]{}\uncurry{\Varid{zip}}\mathbin{\$}{}\<[42]%

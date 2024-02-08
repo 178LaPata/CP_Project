@@ -707,12 +707,12 @@ O diagrama de anamorfismo abaixo visualiza este processo.
 \xymatrix@@C=3cm @@R=2cm{
      \mathbb{(|A|^*)^*}\ar[r]^{out_{Listas}}\ar[d]_{|anaRotate|} & 1 + A^* \times{\mathbb{(|A|^*)^*}}\ar[r]^{id + id \times{\mathbb{|rotate|}} } & 1 + A^* \times{\mathbb{(|A|^*)^*}}\ar[d]^{id +id \times{|anaRotate|}} \\
      (A^*)^* && 1 + A^* \times{\mathbb{(|A|^*)^*}}\ar[ll]^{ in_{Listas}} 
- }
+}
 \end{eqnarray*}
 
 \begin{code}
 anaRotate :: Eq a => [[a]] -> [[a]]
-anaRotate = anaList ( (id -|- id >< rotate) . outList)
+anaRotate = anaList ( (id -|- id >< Main.rotate) . outList)
 \end{code}
 
 Para alcançar a representação final da matriz em espiral, utilizámos a função concat, 
@@ -732,7 +732,7 @@ com os elementos rodados em espiral, como demonstrado pela equivalência a segui
 
 \begin{code}
 matrot :: Eq a => [[a]] -> [a]
-matrot = concat ( anaRotate )
+matrot = concat . anaRotate 
 \end{code}
 
 \subsection*{Problema 2}
@@ -752,8 +752,7 @@ isVowel = oneOf "AEIOUaeiouÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚàáâãèéêìíòó�
 
 %"acidos" e devolve "acidosaio"
 \begin{code}
-pre :: String -> String
-pre = conc . split id (filter isVowel)
+pre  p = conc . split id (filter p)
 \end{code}
 
 Posteriormente, implementamos a função anaReverse, tendo em conta que a lista de entrada para esta função já 
@@ -806,10 +805,11 @@ próximo elemento da lista.
 
 % se receber "acidosaio" devolve no fim "ocidas"
 \begin{code}
-anaReverse :: Eq a => [a] -> [a]
-anaReverse p = (anaList ((id -|- ifp) . outList))
+anaReverse :: (a2 -> Bool) -> [a2] -> [a2]
+anaReverse p = anaList ((id -|- ifp) . outList)
      where 
           ifp  = Cp.cond (p . p1)  ( (split last init) . p2 ) id
+
 \end{code}
 
 \begin{code}
@@ -828,7 +828,7 @@ de forma a inverter os elementos de uma dada lista que satisfazem um dado predic
 
 \begin{code}
 reverseByPredicate :: (a -> Bool) -> [a] -> [a]
-reverseByPredicate p = anaReverse p . pre
+reverseByPredicate p s = anaReverse p $ pre p s
 \end{code}
 
 \subsection*{Problema 3}
@@ -901,44 +901,12 @@ ou seja, o primeiro elemento do acumulador.
 \begin{code}
 snh :: (Integral a, Fractional b) => b -> a -> b
 snh x = wrapper . worker
-    where
-        worker  = for (loop x) (start x) 
-        wrapper = p1 . p1
+     where
+          worker  = for (loop x) (start x) 
+          wrapper = p1 . p1
 \end{code}
 
 \subsection*{Problema 4}
-
-\begin{code}
-data Stop = S0 | S1 | S2 | S3 | S4 | S5 deriving (Show, Eq, Ord, Enum)
-\end{code}
-
-\begin{code}
-type Delay = Integer
-\end{code}
-
-\begin{code}
-type Segment = (Stop, Stop)
-\end{code}
-
-\label{pg:dados}
-\begin{code}
-dados = [((S0,S1),0),((S0,S1),2),((S0,S1),0),((S0,S1),3),((S0,S1),3),
-         ((S1,S2),0),((S1,S2),2),((S1,S2),1),((S1,S2),1),((S1,S2),4),
-         ((S2,S3),2),((S2,S3),2),((S2,S3),4),((S2,S3),0),((S2,S3),5),
-         ((S3,S4),2),((S3,S4),3),((S3,S4),5),((S3,S4),2),((S3,S4),0),
-         ((S4,S5),0),((S4,S5),5),((S4,S5),0),((S4,S5),7),((S4,S5),-1)]
-\end{code}
-
-\begin{code}
-mkf :: Eq a => [(a, b)] -> a -> Maybe b
-mkf = flip Prelude.lookup
-\end{code}
-
-\begin{code}
-instantaneous :: Dist Delay
-instantaneous = D [ (0,1) ]
-\end{code}
-
 
 Para auxiliar a geração da base de dados probabilística, criamos 3 funções auxiliares.
 
@@ -955,11 +923,11 @@ lka k = map p2 . filter ( (== k) . p1 )
      De seguida aplicamos a função nub, que remove os elementos repetidos da lista, e por fim aplicamos a D que transforma a lista de tuplos numa distribuição.
      
 \begin{code}
-mkdist :: Eq a => [a] -> Dist a
-mkdist l =  D $ nub $ map ( (id >< divide) . dup )   l
-    where
-        divide x = fromIntegral (n x l) / fromIntegral t
-        t  = length l
+--mkdist :: Eq a => [a] -> Dist a
+mkdist l =  D $ nub $ map ( (id >< divide) . Cp.dup )   l
+     where
+          divide x = fromIntegral (n x l) / fromIntegral t
+          t  = length l
 
 n x = length . filter (==x)
 \end{code}
@@ -967,7 +935,7 @@ n x = length . filter (==x)
 \item A função mksd começa por aplicar a função lka aos dados, de forma a obter uma lista com os atrasos de um determinado segmento, de seguida aplica a mkdist a essa lista, obtendo assim a distribuição de ocorrência dos atrasos desse segmento.
 % mksd (S0, S1) -> ((S0,S1), 0 40.0% 3 40.0% 2 20.0%)
 \begin{code}
-mksd :: Segment -> (Segment, Dist Delay)
+-- mksd :: Segment -> (Segment, Dist Delay)
 mksd = split id (mkdist . flip lka dados)
 \end{code}
 \end{itemize}
@@ -979,7 +947,7 @@ De seguida aplicamos a função mksd a todos os segmentos,
 devolvendo assim uma lista de tuplos com o segmento e a sua respetiva distribuição. 
 
 \begin{code}
-db :: [(Segment, Dist Delay)]
+--db :: [(Segment, Dist Delay)]
 db = map mksd $ nub $ map p1 dados
 \end{code}
 
@@ -987,7 +955,7 @@ Esta função começa por procurar o segmento na base de dados probabilística, 
 devolve a sua distribuição de atrasos.
 
 \begin{code}
-delay :: Segment -> Dist Delay
+-- delay :: Segment -> Dist Delay
 delay =  fj . mkf db
 \end{code}
 
@@ -1025,7 +993,7 @@ somatorio = cataList ( either (const instantaneous) (uncurry (joinWith (+) . del
 \end{code}
 
 \begin{code}
-pdelay :: Stop -> Stop -> Dist Delay
+-- pdelay :: Stop -> Stop -> Dist Delay
 pdelay a b = somatorio $  uncurry zip $  split id tail $  enumFromTo a b
 \end{code}
 %----------------- Índice remissivo (exige makeindex) -------------------------%
